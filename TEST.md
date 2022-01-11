@@ -83,7 +83,7 @@ Action: Block
 Result: Passed
 ```
 Alternatively, you can exec into kubearmor docker and view ``/tmp/kubearmor.log``
-```bash
+```json
 vagrant@kvmservice-dev:~$ docker exec -it kubearmor tail -n 3 /tmp/kubearmor.log
 {"timestamp":1641834663,"updatedTime":"2022-01-10T17:11:03.903782Z","hostName":"7b0a06b40e20","hostPid":7011,"ppid":6248,"pid":7011,"uid":1000,"type":"HostLog","source":"cat","operation":"Fi
 le","resource":"/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache","data":"syscall=SYS_OPENAT fd=-100 flags=/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache","result":"Passed"}
