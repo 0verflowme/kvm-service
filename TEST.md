@@ -36,3 +36,15 @@ It'll produce a binary ``kvmservice``
 2022-01-10 22:40:09.051421	INFO	Started Policy Streamer
 ```
 5. Also transfer Karmor binary on VM if you don't want to install go to compile on VM
+
+## Testing
+1. The VM policy Used for tests can be found in ``examples`` folder with name kvmpolicy1.yaml
+```yaml
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorVirtualMachine
+metadata:
+  name: testvm1
+  labels:
+    name: vm1
+    vm: true
+```
