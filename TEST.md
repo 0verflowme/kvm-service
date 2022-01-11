@@ -38,7 +38,7 @@ It'll produce a binary ``kvmservice``
 5. Also transfer Karmor binary on VM if you don't want to install go to compile on VM
 
 ## Testing
-1. The VM policy Used for tests can be found in ``examples`` folder with name kvmpolicy1.yaml
+1. The VM policy Used for tests can be found in ``examples`` folder with name ``kvmpolicy1.yaml``
 ```yaml
 apiVersion: security.kubearmor.com/v1
 kind: KubeArmorVirtualMachine
@@ -48,3 +48,47 @@ metadata:
     name: vm1
     vm: true
 ```
+2. The policy to apply on VM i'm using here to block the user to see the contents of /etc/passwd.
+```yaml
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorHostPolicy
+metadata:
+  name: khp-02
+spec:
+  nodeSelector:
+    matchLabels:
+      name: vm1
+  severity: 5
+  file:
+    matchPaths:
+    - path: /etc/passwd
+  action:
+    Block
+```
+3. Run ``cat /etc/passwd`` and see if you can see the contents.
+4. To view the logs, you can use ``karmor log`` to see logs.
+```
+== Alert / 2022-01-10 17:11:03.904713 ==
+Cluster Name: default
+Host Name: 7b0a06b40e20
+Policy Name: ew-khp-01
+Severity: 5
+Type: MatchedHostPolicy
+Source: cat
+Operation: File
+Resource: /etc/passwd
+Data: syscall=SYS_OPENAT fd=-100 flags=/etc/passwd
+Action: Block
+Result: Passed
+```
+Alternatively, you can exec into kubearmor docker and view ``/tmp/kubearmor.log``
+```bash
+vagrant@kvmservice-dev:~$ docker exec -it kubearmor tail -n 3 /tmp/kubearmor.log
+{"timestamp":1641834663,"updatedTime":"2022-01-10T17:11:03.903782Z","hostName":"7b0a06b40e20","hostPid":7011,"ppid":6248,"pid":7011,"uid":1000,"type":"HostLog","source":"cat","operation":"Fi
+le","resource":"/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache","data":"syscall=SYS_OPENAT fd=-100 flags=/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache","result":"Passed"}
+{"timestamp":1641834663,"updatedTime":"2022-01-10T17:11:03.903706Z","hostName":"7b0a06b40e20","hostPid":7011,"ppid":6248,"pid":7011,"uid":1000,"type":"HostLog","source":"cat","operation":"Fi
+le","resource":"/etc/locale.alias","data":"syscall=SYS_OPENAT fd=-100 flags=/usr/share/locale/locale.alias","result":"Passed"}
+{"timestamp":1641834663,"updatedTime":"2022-01-10T17:11:03.903734Z","hostName":"7b0a06b40e20","hostPid":7011,"ppid":6248,"pid":7011,"uid":1000,"type":"HostLog","source":"cat","operation":"Fi
+le","resource":"/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION","data":"syscall=SYS_OPENAT fd=-100 flags=/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION","result":"Passed"}
+```
+**This Test was failed While Testing**
