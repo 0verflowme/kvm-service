@@ -65,8 +65,9 @@ spec:
   action:
     Block
 ```
-3. Run ``cat /etc/passwd`` and see if you can see the contents.
-4. To view the logs, you can use ``karmor log`` to see logs.
+3. Apply the above VM policy using ``./karmor vm policy add policy.yaml`` also you can delete policy using ``./karmor vm policy delete policy.yaml``
+4. Run ``cat /etc/passwd`` and see if you can see the contents.
+5. To view the logs, you can use ``karmor log`` to see logs.
 ```
 == Alert / 2022-01-10 17:11:03.904713 ==
 Cluster Name: default
